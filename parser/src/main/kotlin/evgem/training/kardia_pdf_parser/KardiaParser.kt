@@ -26,7 +26,7 @@ class KardiaParserImpl : KardiaParser {
     }
 
     override fun parse(file: File): KardiaReport? {
-        val reader = PdfReader(file.name)
+        val reader = PdfReader(file.absolutePath)
         try {
             for (pageNumber in 1..reader.numberOfPages) {
                 val pageText = PdfTextExtractor.getTextFromPage(reader, pageNumber)

@@ -15,6 +15,7 @@ repositories {
 
 dependencies {
     implementation("com.lowagie:itext:4.2.1") // use 4.2.1 because of license
+    implementation("com.google.code.gson:gson:2.9.0")
     testImplementation(kotlin("test"))
 }
 
