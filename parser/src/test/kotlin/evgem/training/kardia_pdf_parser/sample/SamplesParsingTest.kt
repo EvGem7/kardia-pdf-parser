@@ -1,11 +1,12 @@
 package evgem.training.kardia_pdf_parser.sample
 
 import evgem.training.kardia_pdf_parser.KardiaParser
-import evgem.training.kardia_pdf_parser.model.KardiaReport
+import evgem.training.kardia_pdf_parser.KardiaParserImpl
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
-import java.io.File
+import org.junit.jupiter.api.assertAll
 import kotlin.test.assertEquals
+import kotlin.test.assertNotNull
 
 class SamplesParsingTest {
 
@@ -14,15 +15,25 @@ class SamplesParsingTest {
     @BeforeEach
     fun before() {
         // stub
-        parser = object : KardiaParser {
-            override fun parse(file: File): KardiaReport? = null
-        }
+        parser = KardiaParserImpl()
     }
 
     @Test
     fun `test all samples parsing`() {
-        SamplesProvider.samples.forEach {
-            assertEquals(it.expectedReport, parser.parse(it.file), "failed to parse sample ${it.name}")
-        }
+        assertAll(
+            SamplesProvider.samples.map {
+                {
+                    val parsed = parser.parse(it.file)
+                    assertNotNull(parsed)
+
+                    val msg = "failed to parse sample ${it.name}"
+                    assertEquals(it.expectedReport.dateTime, parsed.dateTime, msg)
+                    assertEquals(it.expectedReport.heartRate, parsed.heartRate, msg)
+                    assertEquals(it.expectedReport.duration, parsed.duration, msg)
+                    assertEquals(it.expectedReport.notes, parsed.notes, msg)
+                    assertEquals(it.expectedReport.determination, parsed.determination, msg)
+                }
+            }
+        )
     }
 }
